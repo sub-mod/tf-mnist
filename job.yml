@@ -1,0 +1,22 @@
+---
+kind: Job
+apiVersion: batch/v1
+metadata:
+  name: tf-mnist-train
+  labels:
+    appTypes: tf-mnist-train
+spec:
+  template:
+    metadata:
+      labels:
+        appTypes: tf-mnist-train
+    spec:
+      containers:
+      - env:
+        - name: STOP_THRESHOLD
+          value: ""
+        - name: EXPORT_DIR
+          value: ""
+        name: tf-mnist-train
+        image: ""
+      restartPolicy: Never

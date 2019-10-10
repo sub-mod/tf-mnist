@@ -1,0 +1,26 @@
+apiVersion: tekton.dev/v1alpha1
+kind: TaskRun
+metadata:
+  name: change-param-taskrun
+spec:
+  # Use service account with git and image repo credentials
+  serviceAccount: tekton-demo
+  # using the task from here https://github.com/openshift/pipelines-catalog/blob/master/s2i-python-3/s2i-python-3-task.yaml
+  taskRef:
+    name: change-param-task
+  inputs:
+    # git cloning is done into /workspace/source
+    resources:
+    - name: source-repo
+      resourceSpec:
+        type: git
+        params:
+        - name: url
+          value: https://github.com/sub-mod/tf-mnist.git
+    params:
+    - name: yamlFile
+      value: "job.yml"
+    - name: yamlPath
+      value: "spec.template.spec.containers[0].env[0].value"
+    - name: yamlPathValue
+      value: "0.964"

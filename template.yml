@@ -1,0 +1,51 @@
+---
+kind: Template
+apiVersion: v1
+metadata:
+  name: tf-mnist-train
+  annotations:
+    description: Template to create a Job to train.
+    tags: tf-mnist-train
+objects:
+- kind: Job
+  apiVersion: batch/v1
+  metadata:
+    name: "${APPLICATION_NAME}"
+    labels:
+      appTypes: tf-mnist-train
+      appName: "${APPLICATION_NAME}"
+  spec:
+    template:
+      metadata:
+        labels:
+          appTypes: tf-mnist-train
+          deploymentconfig: "${APPLICATION_NAME}"
+          appName: "${APPLICATION_NAME}"
+      spec:
+        containers:
+        - env:
+          - name: STOP_THRESHOLD
+            value: "${STOP_THRESHOLD}"
+          - name: EXPORT_DIR
+            value: "${EXPORT_DIR}"
+          name: "${APPLICATION_NAME}"
+          image: "${IMAGESTREAM}"
+        restartPolicy: Never
+parameters:
+- name: APPLICATION_NAME
+  description: The name of the application.
+  value: tf-mnist-train
+  from: "[a-zA-Z0-9]{10}"
+  required: true
+- name: IMAGESTREAM
+  description: tf-mnist-build:latest
+  value: tf-mnist-build:latest
+  required: true
+- name: STOP_THRESHOLD
+  description: STOP_THRESHOLD
+  value: ''
+  required: true
+- name: EXPORT_DIR
+  description: EXPORT_DIR
+  value: ''
+  required: true

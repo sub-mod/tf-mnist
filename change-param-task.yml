@@ -1,0 +1,36 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: change-param-task
+spec:
+  inputs:
+    resources:
+      - name: source-repo
+        type: git
+
+    params:
+      - name: yamlFile
+        description: The yaml file to update
+
+      - name: yamlPath
+        description: A tree path for attribute in yaml file
+
+      - name: yamlPathValue
+        description: A tree path value for attribute in yaml file
+
+  steps:
+    - name: replace-param
+      image: mikefarah/yq
+      command: ["yq"]
+      args:
+        - "w"
+        - "-i"
+        - "/workspace/source-repo/${inputs.params.yamlFile}"
+        - "${inputs.params.yamlPath}"
+        - "${inputs.params.yamlPathValue}"
+
+    - name: cat
+      image: mikefarah/yq
+      command: ["cat"]
+      args:
+        - "/workspace/source-repo/${inputs.params.yamlFile}"
