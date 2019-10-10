@@ -1,0 +1,33 @@
+apiVersion: tekton.dev/v1alpha1
+kind: TaskRun
+metadata:
+  name: tf-mnist-taskrun
+spec:
+  # Use service account with git and image repo credentials
+  serviceAccount: tekton-demo
+  # using the task from here https://github.com/openshift/pipelines-catalog/blob/master/s2i-python-3/s2i-python-3-task.yaml
+  taskRef:
+    name: s2i-python-3
+  inputs:
+    # git cloning is done into /workspace/source
+    resources:
+    - name: source
+      resourceSpec:
+        type: git
+        params:
+        - name: url
+          value: https://github.com/sub-mod/tf-mnist.git
+    params:
+    - name: TLSVERIFY
+      value: "false"
+  outputs:
+    resources:
+    - name: image
+      resourceSpec:
+        type: image
+        params:
+        - name: url
+          value: image-registry.openshift-image-registry.svc:5000/tekton-demo/tf-mnist-build:latest
+
+
+         
