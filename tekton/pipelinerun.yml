@@ -1,0 +1,33 @@
+---
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineRun
+metadata:
+  generateName: tf-mnist-pipelinerun-
+spec:
+  serviceAccount: tekton-demo
+  pipelineRef:
+    name: change-param-deploy
+  resources:
+  - name: pipeline-source-repo
+    resourceRef:
+      name: tf-mnist-git
+
+  - name: pipeline-built-image
+    resourceRef:
+      name: tf-mnist-image
+
+  params:
+    - name: p-yamlFile
+      value: job.yml
+
+    - name: p-yamlPath1
+      value: spec.template.spec.containers[0].env[0].value
+
+    - name: p-yamlPathValue1
+      value: "0.964"
+
+    - name: p-yamlPath2
+      value: spec.template.spec.containers[0].env[1].value
+
+    - name: p-yamlPathValue2
+      value: "/workspace/source-repo/"

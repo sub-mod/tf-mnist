@@ -29,7 +29,7 @@ spec:
         - "${inputs.params.yamlPath}"
         - "${inputs.params.yamlPathValue}"
 
-    - name: cat
+    - name: cat-file
       image: mikefarah/yq
       command: ["cat"]
       args:

@@ -1,0 +1,44 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Pipeline
+metadata:
+  name: change-param-deploy
+spec:
+  resources:
+    - name: pipeline-source-repo
+      type: git
+
+  params:
+
+    - name: p-yamlFile
+      description: The yaml file to update
+
+    - name: p-yamlPath1
+      description: A tree path for attribute in yaml file
+
+    - name: p-yamlPathValue1
+      description: A tree path value for attribute in yaml file
+
+    - name: p-yamlPath2
+      description: A tree path for attribute in yaml file
+
+    - name: p-yamlPathValue2
+      description: A tree path value for attribute in yaml file
+
+  tasks:
+    - name: change-param1
+      taskRef:
+        name: change-param-task
+      resources:
+        inputs:
+          - name: source-repo
+            resource: pipeline-source-repo
+        outputs:
+          - name: source-repo
+            resource: pipeline-source-repo
+      params:
+        - name: yamlFile
+          value: ${params.p-yamlFile}
+        - name: yamlPath
+          value: ${params.p-yamlPath1}
+        - name: yamlPathValue
+          value: ${params.p-yamlPathValue1}

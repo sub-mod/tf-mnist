@@ -1,0 +1,20 @@
+---
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata:
+  name: tf-mnist-git
+spec:
+  type: git
+  params:
+  - name: url
+    value: https://github.com/sub-mod/tf-mnist.git
+---
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata:
+  name: tf-mnist-image
+spec:
+  type: image
+  params:
+  - name: url
+    value: image-registry.openshift-image-registry.svc:5000/tekton-demo/tf-mnist-build:latest
